@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative '../lib/vaulttool_command'
+
+trap('SIGINT') do
+  warn "\nExecution aborted.\n"
+  exit 1
+end
+
+begin
+  VaulttoolCommand.start
+rescue RuntimeError => e
+  warn e.to_s
+  exit 1
+end
