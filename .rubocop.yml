@@ -1,0 +1,32 @@
+---
+require:
+  - rubocop-performance
+  - rubocop-rspec
+
+Metrics/LineLength:
+  Max: 120
+
+Metrics/MethodLength:
+  Max: 16
+
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*
+
+Metrics/AbcSize:
+  Max: 20
+
+Bundler/GemComment:
+   Enabled: false
+   Include:
+     - Gemfile
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+AllCops:
+  Exclude:
+    - bin/*
