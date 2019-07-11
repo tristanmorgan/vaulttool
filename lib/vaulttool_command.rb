@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-
 require 'awskeyring/awsapi'
 require 'awskeyring/input'
 require 'thor'
@@ -25,9 +24,11 @@ class VaulttoolCommand < Thor
   def login
     password = Awskeyring::Input.read_secret("password for #{ENV['USER']}".rjust(20) + ': ')
 
+    Vaulttool.passcheck(password)
+
     token = Vault.auth.ldap(ENV['USER'], password)
 
-    File.write(Vault::Default.VAULT_DISK_TOKEN, token.auth.client_token)
+    Vaulttool.store(token.auth.client_token) unless token.nil?
   end
 
   desc 'renew', 'Renew you Vault Token'
@@ -35,10 +36,10 @@ class VaulttoolCommand < Thor
   def renew
     token = Vault.auth_token.renew_self
 
-    File.write(Vault::Default.VAULT_DISK_TOKEN, token.auth.client_token)
+    Vaulttool.store(token.auth.client_token) unless token.nil?
   end
 
-  desc 'creds ROLE', 'Retrieve STS credentials for AWS from Vault'
+  desc 'creds ROLE', 'Retrieve IAM credentials for AWS from Vault'
   # Retrieve IAM credentials for AWS from Vault
   def creds(role)
     creds = Vault.logical.read("aws/creds/#{role}")
