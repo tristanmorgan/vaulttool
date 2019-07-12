@@ -11,6 +11,7 @@ require 'vaulttool/version'
 class VaulttoolCommand < Thor
   map %w[--version -v] => :__version
   map %w[--help -h] => :help
+  map ['con'] => :console
 
   desc '--version, -v', 'Prints the version'
   # print the version number
@@ -97,6 +98,36 @@ class VaulttoolCommand < Thor
     rescue Errno::ENOENT => e
       warn e.to_s
       exit 1
+    end
+  end
+
+  desc 'console', 'Open the AWS Console'
+  method_option :path, type: :string, aliases: '-p', desc: 'Path to open'
+  method_option 'no-open', type: :boolean, aliases: '-o', desc: 'dont open, juts print login url', default: false
+  # Open the AWS Console
+  def console # rubocop:disable Metrics/MethodLength
+    cred = Awskeyring.get_valid_creds(account: 'vaulttool', no_token: false)
+
+    path = options[:path] || 'console'
+
+    begin
+      login_url = Awskeyring::Awsapi.get_login_url(
+        key: cred[:key],
+        secret: cred[:secret],
+        token: cred[:token],
+        path: path,
+        user: ENV['USER']
+      )
+    rescue Aws::Errors::ServiceError => e
+      warn e.to_s
+      exit 1
+    end
+
+    if options['no-open']
+      puts login_url
+    else
+      pid = Process.spawn("open \"#{login_url}\"")
+      Process.wait pid
     end
   end
 
