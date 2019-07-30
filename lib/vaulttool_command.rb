@@ -23,7 +23,7 @@ class VaulttoolCommand < Thor
   desc 'login', 'Login to Vault'
   # Login to Vault
   def login
-    password = Awskeyring::Input.read_secret("password for #{ENV['USER']}".rjust(20) + ': ')
+    password = Awskeyring::Input.read_secret("#{"password for #{ENV['USER']}".rjust(20)}: ")
 
     Vaulttool.passcheck(password)
 

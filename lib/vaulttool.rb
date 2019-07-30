@@ -15,7 +15,7 @@ module Vaulttool
     if VAULT_CONFIG.exist? && VAULT_CONFIG.readable?
       VAULT_CONFIG.each_line do |line|
         # token_helper = "/Users/tristan/.vault-security.sh"
-        if line =~ /token_helper\s*=\s*.*/
+        if /token_helper\s*=\s*.*/.match?(line)
           output = system("echo #{line.split('=')[1]} store #{token}")
           puts "testing #{output} done."
         end
@@ -29,8 +29,8 @@ module Vaulttool
   #
   # @param [String] password The potentially weak password
   def self.passcheck(password)
-    sha1 = OpenSSL::Digest::SHA1.new
-    digest = sha1.digest(password).unpack('H*').first.upcase
+    sha1 = OpenSSL::Digest.new('SHA1')
+    digest = sha1.digest(password).unpack1('H*').upcase
 
     uri       = URI("https://api.pwnedpasswords.com/range/#{digest[0..4]}")
     request   = Net::HTTP.new(uri.host, uri.port)
