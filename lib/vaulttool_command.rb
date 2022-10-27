@@ -25,11 +25,11 @@ class VaulttoolCommand < Thor
   desc 'login', 'Login to Vault'
   # Login to Vault
   def login
-    password = Awskeyring::Input.read_secret("#{"password for #{ENV['USER']}".rjust(20)}: ")
+    password = Awskeyring::Input.read_secret("#{"password for #{ENV.fetch('USER', nil)}".rjust(20)}: ")
 
     Vaulttool.passcheck(password)
 
-    token = Vault.auth.ldap(ENV['USER'], password)
+    token = Vault.auth.ldap(ENV.fetch('USER', nil), password)
 
     Vaulttool.store(token.auth.client_token) unless token.nil?
   end
@@ -120,7 +120,7 @@ class VaulttoolCommand < Thor
   method_option :path, type: :string, aliases: '-p', desc: 'Path to open'
   method_option 'no-open', type: :boolean, aliases: '-o', desc: 'dont open, juts print login url', default: false
   # Open the AWS Console
-  def console # rubocop:disable Metrics/MethodLength
+  def console
     cred = Awskeyring.get_valid_creds(account: 'vaulttool', no_token: false)
 
     path = options[:path] || 'console'
@@ -131,7 +131,7 @@ class VaulttoolCommand < Thor
         secret: cred[:secret],
         token: cred[:token],
         path: path,
-        user: ENV['USER']
+        user: ENV.fetch('USER', nil)
       )
     rescue Aws::Errors::ServiceError => e
       warn e.to_s

@@ -1,32 +1,39 @@
 ---
 require:
   - rubocop-performance
-  - rubocop-rspec
+  - rubocop-rubycw
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
 
 Metrics/MethodLength:
-  Max: 16
+  Max: 20
+
+Metrics/AbcSize:
+  Max: 20
+
+Metrics/ClassLength:
+  Exclude:
+    - lib/*.rb
 
 Metrics/BlockLength:
   Exclude:
     - spec/**/*
 
-Metrics/AbcSize:
-  Max: 20
+Naming/AccessorMethodName:
+   Enabled: false
 
 Bundler/GemComment:
    Enabled: false
    Include:
      - Gemfile
 
-RSpec/MultipleExpectations:
-  Enabled: false
-
-RSpec/ExampleLength:
-  Enabled: false
+Rubycw/Rubycw:
+  Exclude:
+    - ./*.md
 
 AllCops:
+  NewCops: enable
+  TargetRubyVersion: 2.6
   Exclude:
     - bin/*

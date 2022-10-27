@@ -5,7 +5,7 @@ require 'pathname'
 
 # Vaulttool Module,
 module Vaulttool
-  VAULT_CONFIG = Pathname.new("#{ENV['HOME']}/.vault").expand_path.freeze
+  VAULT_CONFIG = Pathname.new("#{Dir.home}/.vault").expand_path.freeze
 
   # Stored the Vault token using the configured vault token helper
   # or fall back to the ~/.vault-token file

@@ -26,4 +26,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency('aws-sdk-iam')
   spec.add_dependency('thor')
   spec.add_dependency('vault')
+  spec.metadata['rubygems_mfa_required'] = 'true'
 end
