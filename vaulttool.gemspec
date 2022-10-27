@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency('awskeyring')
+  spec.add_dependency('aws-sdk-iam')
   spec.add_dependency('thor')
   spec.add_dependency('vault')
 end

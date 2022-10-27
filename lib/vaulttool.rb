@@ -37,7 +37,7 @@ module Vaulttool
     request.use_ssl = true
     returned_content = request.get(uri).body
 
-    raise 'insecure password' if returned_content.include?(digest[5..-1])
+    raise 'insecure password' if returned_content.include?(digest[5..])
 
     password
   end

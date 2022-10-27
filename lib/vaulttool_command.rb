@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 require 'awskeyring/awsapi'
+require 'awskeyring/credential_provider'
 require 'awskeyring/input'
+require 'aws-sdk-iam'
 require 'thor'
 require 'vault'
 require 'vaulttool'
@@ -99,6 +101,19 @@ class VaulttoolCommand < Thor
       warn e.to_s
       exit 1
     end
+  end
+
+  desc 'list-users', 'List users in account'
+  # list aws users
+  def list_users
+    client = Aws::IAM::Client.new(
+      credentials: Awskeyring::CredentialProvider.new('vaulttool')
+    )
+    resp = client.list_users(
+      {}
+    )
+
+    puts JSON.pretty_generate(resp.to_h)
   end
 
   desc 'console', 'Open the AWS Console'
